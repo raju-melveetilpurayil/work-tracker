@@ -1,0 +1,50 @@
+﻿@page "/worklog"
+@using WorkTracker.Services
+@inject WorkLogService workLogService
+
+<div class="vstack gap-4">
+    @if (_days is null)
+    {
+        <div class="text-center text-muted py-4">
+            <span class="spinner-border spinner-border-sm me-2"></span>Loading…
+        </div>
+    }
+    else if (_days.Count == 0)
+    {
+        <p class="text-muted">No work logged in this period.</p>
+    }
+    else
+    {
+        @foreach (var day in _days)
+        {
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <span class="fw-semibold">@day.Date.ToString("dddd, dd MMM yyyy")</span>
+                    <span class="badge bg-primary rounded-pill">@Format(day.TotalTime) total</span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in day.Items)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-semibold">@item.Title</span>
+                                <span class="text-muted small">
+                                    @item.StartTime.ToString("HH:mm") – @item.EndTime.ToString("HH:mm")
+                                    (@Format(item.EndTime - item.StartTime))
+                                </span>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                            {
+                                <div class="text-muted small mt-1">@item.Description</div>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    
+}

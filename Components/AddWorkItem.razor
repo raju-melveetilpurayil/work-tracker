@@ -1,0 +1,84 @@
+﻿
+@using System.ComponentModel.DataAnnotations
+@using WorkTracker.Models
+@rendermode InteractiveServer
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white"
+                 style="height:60px; display:flex; align-items:center;">
+                <h5 class="mb-0">
+                    <i class="bi bi-plus-circle me-2"></i>Add Work Item
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <EditForm Model="_model" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Title</label>
+                        <InputText @bind-Value="_model.Title" class="form-control"
+                                   placeholder="e.g. Sprint planning meeting" />
+                        <ValidationMessage For="() => _model.Title" class="text-danger small" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <InputTextArea @bind-Value="_model.Description" class="form-control"
+                                       rows="3" placeholder="Optional details..." />
+                        <ValidationMessage For="() => _model.Description" class="text-danger small" />
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Start</label>
+                            <InputDate Type="InputDateType.DateTimeLocal"
+                                       @bind-Value="_model.StartTime" class="form-control" />
+                            <ValidationMessage For="() => _model.StartTime" class="text-danger small" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">End</label>
+                            <InputDate Type="InputDateType.DateTimeLocal"
+                                       @bind-Value="_model.EndTime" class="form-control" />
+                            <ValidationMessage For="() => _model.EndTime" class="text-danger small" />
+                        </div>
+                    </div>
+
+                    @if (_model.EndTime > _model.StartTime)
+                    {
+                        <div class="text-muted small mt-2">
+                            <i class="bi bi-clock me-1"></i>Duration: @GetDuration()
+                        </div>
+                    }
+
+                    @if (_errorMessage is not null)
+                    {
+                        <div class="alert alert-danger mt-3 mb-0 py-2">@_errorMessage</div>
+                    }
+                    @if (_savedMessage is not null)
+                    {
+                        <div class="alert alert-success mt-3 mb-0 py-2">@_savedMessage</div>
+                    }
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="ResetForm" disabled="@_isSaving">
+                            Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary" disabled="@_isSaving">
+                            @if (_isSaving)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                            }
+                            Save Work Item
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+

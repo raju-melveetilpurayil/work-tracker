@@ -1,0 +1,6 @@
+﻿@page "/"
+@using WorkTracker.Services
+<PageTitle>Home</PageTitle>
+@rendermode InteractiveServer
+@inject WorkLogService WorkLog
+<AddWorkItem OnSaved="SaveWorkItem"></AddWorkItem>
